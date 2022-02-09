@@ -133,12 +133,24 @@ namespace OCBC_Joint_Account_Application.Controllers
             HttpContext.Session.SetInt32("AccountTypeID", 2);
             HttpContext.Session.SetString("FirstLoad", "false");
 
+            var path = "data.txt";
+            using var sw = new StreamWriter(path);
+            sw.Write("Empty");
+
             if (JAC != null)
             {
                 HttpContext.Session.SetString("JAC", JAC);
                 InsertQRForJointApplicant(AT, JAC);
                 return RedirectToAction("ApplyOnline", "Account360");
             }
+            else if(HttpContext.Session.GetString("ContinueWifi") != null)
+            {
+                string phrase = HttpContext.Session.GetString("ContinueWifi");
+                string[] words = phrase.Split(',');
+                ViewData["Salutation_WIFI"] = words[0];
+                ViewData["FullName_WIFI"] = words[1];
+            }
+
             checkJAC(HttpContext.Session.GetString("JAC"));
             if (ResponseQR() == "ContinueOnWeb")
             {
@@ -627,8 +639,6 @@ namespace OCBC_Joint_Account_Application.Controllers
             string TargetUrl = savePath;
             double confidence = 0;
 
-
-
             IFaceClient faceClient = Authenticate(ENDPOINT, SUBSCRIPTION_KEY);
             try
             {
@@ -1066,7 +1076,7 @@ namespace OCBC_Joint_Account_Application.Controllers
                 HttpContext.Session.SetObjectAsJson("ApplicantsDetails", ac360);
                 return RedirectToAction("Verify", "Account360");
             }
-
+            
             ResetQR();
             HttpContext.Session.SetString("PageType", "Account360");
             ViewData["Salutation"] = Salutation;
@@ -1153,6 +1163,39 @@ namespace OCBC_Joint_Account_Application.Controllers
                         ac360.ContactNo = c.ContactNo;
                     }
                 }
+            }
+            else if (HttpContext.Session.GetString("ContinueWifi") != null && (HttpContext.Session.GetString("ApplyMethod") == "QR" || HttpContext.Session.GetString("ApplyMethod") == "iBanking" || HttpContext.Session.GetString("CustSingpass") == "existingCustomer"))
+            {
+                string phrase = HttpContext.Session.GetString("ContinueWifi");
+                string[] words = phrase.Split(',');
+
+                ac360.SalutationJoint = words[0];
+                ac360.JointApplicantName = words[1];
+                ac360.JointApplicantNRIC = words[2];
+                ac360.Email = words[9];
+                ac360.ContactNo = words[10];
+
+                //ac360.NRIC = words[2];
+                //ac360.Salutation = words[0];
+                //ac360.FullName = words[1];
+                //ac360.EmailAddress = words[9];
+                //ac360.MobileNum = words[10];
+                //if (words[7] == "M")
+                //{
+                //    ac360.Gender = "Male";
+                //}
+                //else
+                //{
+                //    ac360.Gender = "Female";
+                //}
+                //ac360.MaritialStatus = words[6];
+                //ac360.Address = words[8];
+                //ac360.CountryOfBirth = words[4];
+                //ac360.Nationality = words[5];
+                //ac360.DateOfBirth = Convert.ToDateTime(words[3]);
+                //ac360.Employer = words[13];
+                //ac360.Occupation = words[11];
+                //ac360.AnnualIncome = words[12];
             }
 
             HttpContext.Session.SetObjectAsJson("ApplicantsDetails", ac360);
@@ -1373,20 +1416,33 @@ namespace OCBC_Joint_Account_Application.Controllers
             return View();
         }
 
-        
-        public ActionResult Connect()
+       
+        private static string GetMachineNameFromIPAddress(string ipAdress)
         {
-            HttpContext.Session.SetString("PageType", "Account360");
-            return View();
+            string machineName = string.Empty;
+            try
+            {
+                IPHostEntry hostEntry = System.Net.Dns.GetHostEntry(ipAdress);
+                machineName = hostEntry.HostName;
+            }
+            catch (Exception ex)
+            {
+                machineName = "No Hostname Found";
+            }
+            return machineName;
         }
 
         public ActionResult WIFI()
         {
             HttpContext.Session.SetString("PageType", "Account360");
+            string hostname = GetMachineNameFromIPAddress(IPAddress.Loopback.ToString());
+            ViewData["Hostname"] = hostname;
+
+
             //Start Broadcasting
             Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             IPAddress broadcast = IPAddress.Parse("192.168.1.255");
-            byte[] sendbuf = Encoding.ASCII.GetBytes("Is anyone there? :)");
+            byte[] sendbuf = Encoding.ASCII.GetBytes(hostname);
             IPEndPoint ep = new IPEndPoint(broadcast, 11000);
             s.SendTo(sendbuf, ep);
 
@@ -1421,6 +1477,28 @@ namespace OCBC_Joint_Account_Application.Controllers
             return View();
         }
 
+        public ActionResult Connect()
+        {
+            HttpContext.Session.SetString("PageType", "Account360");
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Connect(int? id)
+        {
+            HttpContext.Session.SetString("PageType", "Account360");
+            if (id == 1)
+            {
+                HttpContext.Session.SetString("data", "");
+                return RedirectToAction("WIFI", "Account360");
+            }
+            else if(id == 2)
+            {
+                HttpContext.Session.SetString("ContinueWifi", System.IO.File.ReadAllText("data.txt"));
+                return RedirectToAction("ApplyOnline", "Account360");
+            }
+            return View();
+        }
 
         public ActionResult Network()
         {
@@ -1434,6 +1512,7 @@ namespace OCBC_Joint_Account_Application.Controllers
                 Console.WriteLine("Waiting for broadcast");
                 byte[] bytes = listener.Receive(ref groupEP);
                 HttpContext.Session.SetString("ListeningIPAddress", groupEP.Address.ToString());
+                HttpContext.Session.SetString("ListeningHostname", Encoding.ASCII.GetString(bytes, 0, bytes.Length));
                 Console.Write($"Received broadcast from {groupEP.Address}");
                 Console.WriteLine($" {Encoding.ASCII.GetString(bytes, 0, bytes.Length)}");
             }
@@ -1448,8 +1527,7 @@ namespace OCBC_Joint_Account_Application.Controllers
 
 
             ViewData["TCPIp"] = groupEP.Address.ToString();
-            ViewData["TCPHost"] = System.Net.Dns.GetHostEntry(groupEP.Address.ToString()).HostName.ToString();
-            HttpContext.Session.SetString("TCPHost", System.Net.Dns.GetHostEntry(groupEP.Address.ToString()).HostName.ToString());
+            ViewData["TCPHost"] = HttpContext.Session.GetString("ListeningHostname");
             return View();
         }
 
@@ -1470,22 +1548,16 @@ namespace OCBC_Joint_Account_Application.Controllers
                 {
                     Console.WriteLine(msg.MessageString);
                 };
+                return RedirectToAction("SuccessWIFI", "Account360");
             }   
             return View();
         }
-
 
         public ActionResult SuccessWIFI()
         {
             HttpContext.Session.SetString("PageType", "Account360");
             return View();
         }
-        public ActionResult Device()
-        {
-            HttpContext.Session.SetString("PageType", "Account360");
-            return View();
-        }
-
         /**==========================
                     METHODS
         ==========================**/

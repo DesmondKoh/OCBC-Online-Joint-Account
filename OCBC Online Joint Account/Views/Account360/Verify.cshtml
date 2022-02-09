@@ -13,6 +13,15 @@
         </div>
     </div>
 }
+else if (Context.Session.GetString("ContinueWifi") != null)
+{
+ <div class="container-fluid">
+        <div class="vl-360 joint-account-notification">
+            <h4>Continuation of Joint-Account <br /> application with </h4>
+            <h3>@ViewData["Salutation_WIFI"] @ViewData["FullName_WIFI"]</h3>
+        </div>
+    </div>
+}
 
 <div class="container-fluid applicant">
     <div class="completion-bar">
@@ -202,6 +211,21 @@
             <h5>(2) An email and SMS will be sent to the joint-application to continue the application.</h5>
         </div>
         <input class="resend" type="submit" value="Submit" asp-controller="Account360" asp-action="Verify" asp-route-id="1"/>
-        <input class="resend" type="submit" value="Continue with WIFI" asp-controller="Account360" asp-action="Verify" asp-route-id="2" style="width: 230px; background-color: rebeccapurple;"/>
+        @if (Context.Session.GetString("ContinueWifi") == null)
+        {
+            <input class="resend" type="submit" value="Continue with WIFI" data-toggle="modal" data-target="#accTypeModalCenter" asp-controller="Account360" asp-action="Verify" asp-route-id="2" style="width: 230px; background-color: rebeccapurple;"/>
+        }
     </form>
+
 </div>
+
+<div class="modal fade" id="accTypeModalCenter" tabindex="-1" role="dialog" aria-labelledby="accTypeModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h2 class="verify-model">Looking for a device...</h2>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -11,6 +11,7 @@ using RestSharp;
 using OCBC_Joint_Account_Application.Models;
 using OCBC_Joint_Account_Application.DAL;
 using System.IO;
+using System.Net;
 
 namespace OCBC_Joint_Account_Application.Controllers
 {
@@ -29,11 +30,7 @@ namespace OCBC_Joint_Account_Application.Controllers
             HttpContext.Session.SetString("PageType", "OCBC");
             HttpContext.Session.SetString("Applicant", "");
             ResetQR();
-
-            var path = "data.txt";
-            using var sw = new StreamWriter(path);
-            sw.Write("Empty");
-
+    
             if (HttpContext.Session.GetString("JAC") != null)
             {
                 HttpContext.Session.Remove("JAC");
