@@ -133,9 +133,6 @@ namespace OCBC_Joint_Account_Application.Controllers
             HttpContext.Session.SetInt32("AccountTypeID", 2);
             HttpContext.Session.SetString("FirstLoad", "false");
 
-            var path = "data.txt";
-            using var sw = new StreamWriter(path);
-            sw.Write("Empty");
 
             if (JAC != null)
             {
@@ -147,8 +144,8 @@ namespace OCBC_Joint_Account_Application.Controllers
             {
                 string phrase = HttpContext.Session.GetString("ContinueWifi");
                 string[] words = phrase.Split(',');
-                ViewData["Salutation_WIFI"] = words[0];
-                ViewData["FullName_WIFI"] = words[1];
+                HttpContext.Session.SetString("Salutation_WIFI", words[0]);
+                HttpContext.Session.SetString("FullName_WIFI", words[1]);
             }
 
             checkJAC(HttpContext.Session.GetString("JAC"));
@@ -216,7 +213,7 @@ namespace OCBC_Joint_Account_Application.Controllers
 
                 ////OTP API by Twilio
                 //var accountSid = "AC900a65cf35b142ba9d231968f7975595";
-                //var authToken = "da17e6e9cd76d5489c94db4e9f9dcc32";
+                //var authToken = "6dbf2032023e857f59f960615d9afb65";
                 //TwilioClient.Init(accountSid, authToken);
                 //var messageOptions = new CreateMessageOptions(new PhoneNumber("+65" + mobileNum));
                 //messageOptions.MessagingServiceSid = "MG9dc1a6ffbac9048864eaadfda51637fc";
@@ -521,6 +518,7 @@ namespace OCBC_Joint_Account_Application.Controllers
 
         public ActionResult Upload()
         {
+            HttpContext.Session.SetString("PageType", "Account360");
             checkJAC(HttpContext.Session.GetString("JAC"));
             HttpContext.Session.SetString("ApplyMethod", "Scan");
 
@@ -771,6 +769,7 @@ namespace OCBC_Joint_Account_Application.Controllers
         ==========================**/
         public ActionResult UploadForeign()
         {
+            HttpContext.Session.SetString("PageType", "Account360");
             checkJAC(HttpContext.Session.GetString("JAC"));
             HttpContext.Session.SetString("ApplyMethod", "Scan");
             ViewData["IsSingaporean"] = true;
@@ -1030,6 +1029,7 @@ namespace OCBC_Joint_Account_Application.Controllers
 
         public ActionResult JointApplicant()
         {
+            HttpContext.Session.SetString("PageType", "Account360");
             if (HttpContext.Session.GetString("JAC") != null && (HttpContext.Session.GetString("ApplyMethod") == "QR" || HttpContext.Session.GetString("ApplyMethod") == "iBanking" || HttpContext.Session.GetString("CustSingpass") == "existingCustomer"))
             {
                 checkJAC(HttpContext.Session.GetString("JAC"));
@@ -1276,7 +1276,7 @@ namespace OCBC_Joint_Account_Application.Controllers
                     try
                     {
                         var accountSid = "AC900a65cf35b142ba9d231968f7975595";
-                        var authToken = "da17e6e9cd76d5489c94db4e9f9dcc32";
+                        var authToken = "6dbf2032023e857f59f960615d9afb65";
                         TwilioClient.Init(accountSid, authToken);
                         var messageOptions = new CreateMessageOptions(new PhoneNumber("+65" + a360.ContactNo));
                         messageOptions.MessagingServiceSid = "MG9dc1a6ffbac9048864eaadfda51637fc";

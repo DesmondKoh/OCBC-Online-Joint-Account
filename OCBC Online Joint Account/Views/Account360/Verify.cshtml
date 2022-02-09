@@ -18,7 +18,7 @@ else if (Context.Session.GetString("ContinueWifi") != null)
  <div class="container-fluid">
         <div class="vl-360 joint-account-notification">
             <h4>Continuation of Joint-Account <br /> application with </h4>
-            <h3>@ViewData["Salutation_WIFI"] @ViewData["FullName_WIFI"]</h3>
+            <h3>@Context.Session.GetString("Salutation_WIFI") @Context.Session.GetString("FullName_WIFI")</h3>
         </div>
     </div>
 }

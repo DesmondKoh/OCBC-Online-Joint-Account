@@ -17,7 +17,7 @@ else if (Context.Session.GetString("ContinueWifi") != null)
  <div class="container-fluid">
         <div class="vl-360 joint-account-notification">
             <h4>Continuation of Joint-Account <br /> application with </h4>
-            <h3>@ViewData["Salutation_WIFI"] @ViewData["FullName_WIFI"]</h3>
+            <h3>@Context.Session.GetString("Salutation_WIFI") @Context.Session.GetString("FullName_WIFI")</h3>
         </div>
     </div>
 }
@@ -99,19 +99,21 @@ else if (Context.Session.GetString("ContinueWifi") != null)
             </div>
         </div>
 
-        <hr class="divider">
-        <div class="vl-360"><h2>Continue Application with WIFI Direct</h2></div>
-        <div class="row">
-            <div class="col-md-4">
-                <h3>Search for Applicant</h3>
+        @if (Context.Session.GetString("JAC") == null)
+        {
+            <hr class="divider">
+            <div class="vl-360"><h2>Continue Application with WIFI Direct</h2></div>
+            <div class="row">
+                <div class="col-md-4">
+                    <h3>Search for Applicant</h3>
+                </div>
+                <div class="col-md-5">
+                    <h4>Continue your application where applicants is in the same WIFI network</h4>
+                </div>
+                <div class="col-md-3">
+                    <a href="~/Account360/WIFI"><input type="submit" class="btn myinfo-btn" value="Discover Applicant"></a>
+                </div>
             </div>
-            <div class="col-md-5">
-                <h4>Continue your application where applicants is in the same WIFI network</h4>
-            </div>
-            <div class="col-md-3">
-                <a href="~/Account360/WIFI"><input type="submit" class="btn myinfo-btn" value="Discover Applicant"></a>
-            </div>
-        </div>    
-
+        }
     </div>
 </div>
