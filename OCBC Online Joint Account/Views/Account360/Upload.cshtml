@@ -1,0 +1,201 @@
+﻿@model OCBC_Joint_Account_Application.Models.CustApplication
+
+@{ ViewData["Title"] = "Upload"; }
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="~/js/webcam.js"></script>
+<script type="text/javascript">
+    Webcam.set({
+        width: 360,
+        height: 260,
+        image_format: 'jpeg',
+        jpeg_quality: 90
+    });
+</script>
+<h1>@ViewData["UploadMessage"]</h1>
+@if (Context.Session.GetString("JAC") != null)
+{
+    <div class="container-fluid">
+        <div class="vl-360 joint-account-notification">
+            <h4>Continuation of Joint-Account <br /> application with </h4>
+            <h3>@ViewData["MainSalutation"] @ViewData["MainName"]</h3>
+        </div>
+    </div>}
+
+<div class="container-fluid" style="margin-top: 100px;">
+    <div class="completion-bar">
+        @if (Context.Session.GetString("JAC") != null)
+        {
+            <div class="completion-bar-3">
+                <progress value="1" max="3"></progress>
+                <h1 class="text-1"><b>Upload Document</b></h1>
+                <h1 class="text-2">Joint-Applicant Information</h1>
+                <h1 class="text-3">Verify Information</h1>
+                <h2 class="circle circle-1"></h2>
+                <h2 class="circle circle-2"></h2>
+                <h2 class="circle circle-3"></h2>
+            </div> }
+        else
+        {
+            <progress value="1" max="4"></progress>
+            <h1 class="text-1"><b>Upload Document</b></h1>
+            <h1 class="text-2">Main Applicant Information</h1>
+            <h1 class="text-3">Joint-Applicant Information</h1>
+            <h1 class="text-4">Verify Information</h1>
+            <h2 class="circle circle-1"></h2>
+            <h2 class="circle circle-2"></h2>
+            <h2 class="circle circle-3"></h2>
+            <h2 class="circle circle-4"></h2>}
+    </div>
+</div>
+
+<!--If user chooses Singaporean (Default option from the radio btn) radio btn, hide the Foreigner details-->
+<form asp-action="Upload" enctype="multipart/form-data">
+    <div class="container-fluid upload" style="margin-top: 100px">
+        <h1 style="font-size: 17px; font-weight: bolder; color: black; margin-top: 50px">
+            Upload Documents for Singaporeans and Permanent Residents:
+        </h1>
+        <div class="row" style="margin-top: 50px;">
+            <div class="col-md-8">
+                <div class="row" style="margin-top: 30px">
+                    <div class="col-md-1" style="text-align: right;">
+                        <img src="~/image/img-file-icon.png" style="height:55px;">
+                    </div>
+                    <div class="col-md-7">
+                        <h1 style="font-size: 17px; font-weight: bolder; color: black ;">
+                            Photo Identity (Front)
+                        </h1>
+                        <h2 style="font-size: 17px; font-weight: lighter; color: black ;">
+                            Please make sure full front of Identity Card is in frame.
+                        </h2>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="file" asp-for="CustNRICFrontUpload" id="input1" accept="image/png, image/gif, image/jpeg" required style="margin-bottom:20px;" /><!--Upload btn-->
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 30px">
+                    <div class="col-md-1" style="text-align: right;">
+                        <img src="~/image/img-file-icon.png" style="height:55px;">
+                    </div>
+                    <div class="col-md-7">
+                        <h1 style="font-size: 17px; font-weight: bolder; color: black ;">
+                            Photo Identity (Back)
+                        </h1>
+                        <h2 style="font-size: 17px; font-weight: lighter; color: black ;">
+                            Please make sure full back of Identity Card is in frame.
+                        </h2>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="file" asp-for="CustNRICBackUpload" id="input2" accept="image/png, image/gif, image/jpeg" required style="margin-bottom:20px;" /><!--Upload btn-->
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 30px">
+                    <div class="col-md-1" style="text-align: right;">
+                        <img src="~/image/img-file-icon.png" style="height:55px;">
+                    </div>
+                    <div class="col-md-7">
+                        <h1 style="font-size: 17px; font-weight: bolder; color: black ;">
+                            Residential Address
+                        </h1>
+                        <h2 style="font-size: 17px; font-weight: lighter; color: black ;">
+                            Only Utilities, Phone Bill is accepted. <br>
+                            Please make sure full document is in frame.
+                        </h2>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="file" asp-for="CustProofOfResidenceUpload" accept="image/png, image/gif, image/jpeg" required style="margin-bottom:20px;" /><!--Upload btn-->
+                    </div>
+                </div>
+                <div class="row selfie" style="margin-top: 30px; display: none">
+                    <div class="col-md-1" style="text-align: right;">
+                        <img src="~/image/img-file-icon.png" style="height:55px;">
+                    </div>
+                    <div class="col-md-7">
+                        <h1 style="font-size: 17px; font-weight: bolder; color: black ;">
+                            Selfie
+                        </h1>
+                        <h2 style="font-size: 15px; font-weight: lighter; color: black ;">
+                            Please upload a recent picture of yourself to verify your identity <br>
+                            Please make your face can be seen clearly
+                        </h2>
+
+                    </div>
+                    <div class="col-md-4">
+
+                    </div>
+                </div>
+                <div class="row selfie" style="display: none">
+                    <div class="col-md-6">
+                        <div id="webcam"></div>
+                        <input type="button" id="btncapture" required style="margin-bottom:20px; margin-left:7px;" value="Take Photo" />
+                    </div>
+                    <div class="col-md-4 justify-content-center align-items-center" id="selfiePlaceholder" style="border: 2px dashed black; display:flex; flex-direction:column; height:260px; width:360px;">
+                        <img src="~/image/camera.png" title="camera icons" style="width:100px; height:auto;" />
+                        <p style="color:grey; font-weight:lighter; text-align:center;">Your Selfie will appear here</p>
+                    </div>
+                    <div class="col" id="selfieDiv" style="display: none">
+                        <div><img id="captured"></div>
+                        <div style="display:flex; flex-direction:row; align-items:center">
+                            <p style="color:grey; font-weight:lighter; text-align:center; padding-right:10px; margin-top:0px; margin-bottom:0px">
+                                Use picture for verification:
+                            </p>
+                            <label class="switch">
+                                <input type="checkbox" id="usePicture" required>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <input type="hidden" asp-for="SelfieURL" id="url" />
+                    </div>
+                </div>
+                <div style="margin-top: 60px; text-align:left;">
+                    <a style="color: black; font-weight: bolder; font-size: 17px;" asp-action="UploadForeign">Foreigner Document Upload</a>
+                    <br /><br />
+                    <h2 style="font-size: 20px; font-weight: lighter; color: red;">@TempData["FaceError"]</h2>
+                    <h2 style="font-size: 20px; font-weight: lighter; color: red;">@TempData["WrongIC"]</h2>
+                    <input type="submit" class="btn btn-primary" asp-action="Upload" value="Next" style=" margin-left: 50px; height: 50px; background-color: transparent; border-color: red; font-weight: bold; padding: 10px 30px 10px 30px; color: red; font-size: 17px;" />
+                </div>
+            </div>
+            <div class="col-md-4 uploadCard" style="margin-top: -250px">
+                @{
+                    @await Html.PartialAsync("_AccountInfoCard.cshtml"); }
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    $(document).on('change', 'input', function () {
+        if (navigator.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function () {
+                    var notEmpty = true;
+                    $('input:file:visible').each(function () {
+                        if (!$(this).val()) {
+                            notEmpty = false;
+                        };
+                    });
+                    console.log(notEmpty);
+                    if (notEmpty) {
+                        $(".selfie").show();
+                        Webcam.attach("#webcam");
+                        $("#btncapture").click(function () {
+                            $("#selfiePlaceholder").hide()
+                            $("#selfieDiv").show();
+                            Webcam.snap(function (data_uri) {
+                                $("#captured")[0].src = data_uri;
+                            })
+                        });
+                        $("#usePicture").click(function () {
+                            $("#url").val($("#captured")[0].src)
+                        });
+                    };
+                })
+                .catch(function () {
+                    $("#url").val(null)
+                    $("#usePicture").prop('checked', true);
+                    console.log("Something went wrong!");
+                });
+        }
+    });
+</script>
+
+

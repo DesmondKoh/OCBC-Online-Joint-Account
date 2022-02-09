@@ -1,0 +1,141 @@
+﻿.bg-login {
+    height: 100%;
+    background-size: cover;
+    background-image: url("../image/login-bg.png");
+    min-width: 100%;
+    width: auto;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index:-2;
+}
+
+.login-building img {
+    position: fixed;
+    right: 0;
+    min-width: 100%;
+    width: auto;
+    height: 100%;
+    z-index:-1;
+}
+
+.inner-wrap {
+    width: 45%;
+    margin-left: 24%;
+    margin-right: auto;
+}
+
+.login-btn {
+    height: 45px;
+    width: 130px;
+    border-radius: 5px;
+    font-size: 15px;
+    background-color: red;
+    border-color: transparent;
+    color: white;
+    font-weight: bold;
+}
+
+.login-form {
+    background-color: white;
+    width: 500px;
+}
+
+.login-form .row {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.login-form .row .spacing {
+    padding-bottom: 40px;
+}
+
+.ib-logo {
+    display: flex;
+    width: 100%;
+    height: 39px;
+    margin-top: 60px;
+    margin-bottom: 40px;
+}
+
+.textbox-title {
+    font-weight: lighter;
+    color: dimgray;
+}
+
+.form-textbox {
+    border: transparent;
+    border-bottom: black solid 1px;
+    width: 100%;
+    height: 50px;
+    font-size: 15px;
+    margin: -5px 0 20px 15px;
+    color: black;
+    padding-left: 1px;
+    outline: none;
+}
+
+.form-textbox:active{
+    outline: none;
+}
+
+.ss {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background: url(../image/secure-lock-icon.png) no-repeat;
+    display: block;
+    float: left;
+    height: 16px;
+    margin-top: 60px;
+    margin-left: 10.5px;
+    width: 100%;
+    background-size: contain;
+    padding-left: 20px;
+    line-height: 7px;
+    font-size: 14px;
+    font-weight: lighter;
+    color: dimgray;
+}
+
+.form-title {
+    margin-bottom: 45px;
+    font-size: 30px;
+}
+
+.button-header {
+    display: flex;
+    height: 70px;
+    justify-content: space-around;
+    background-color: whitesmoke;
+    padding-top: 20px;
+    padding-bottom: 10px;
+    font-weight: bold;
+    color: dimgray;
+}
+
+.button-header-active {
+    border-top: 3px solid #424347;
+    background-color: white;
+}
+
+.sign-up-now {
+    background-color: whitesmoke;
+    text-align: left;
+    width: 100%;
+    padding: 12px;
+    height: 50px;
+    font-size: 15px;
+}
+
+.content {
+    padding: 0 60px 0 30px;
+}
+
+.no-pin {
+    font-size: 13px;
+}
+
+.col-md-5{
+    text-align: right;
+}

@@ -1,0 +1,182 @@
+﻿@model OCBC_Joint_Account_Application.Models.Account360ViewModel
+
+@{ ViewData["Title"] = "Identity Verification"; }
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="~/js/webcam.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#SMS-OTP").click(function () {
+            $("#sms-verify").show("fast");
+            $("#face-verify").hide("fast");
+        });
+
+        $("#Face").click(function () {
+            $("#face-verify").show("fast");
+            $("#sms-verify").hide("fast");
+        });
+
+        Webcam.set({
+            width: 270,
+            height: 170,
+            image_format: 'jpeg',
+            jpeg_quality: 90
+        });
+        Webcam.attach("#webcam")
+        $("#btncapture").click(function () {
+            $("#selfiePlaceholder").hide()
+            $("#selfieDiv").show();
+            Webcam.snap(function (data_uri) {
+                $("#captured")[0].src = data_uri;
+            })
+        });
+        $("#usePicture").click(function () {
+            $("#url").val($("#captured")[0].src)
+        });
+    });
+
+
+</script>
+
+
+@if (Context.Session.GetString("JAC") != null)
+{
+    <div class="container-fluid">
+        <div class="vl-360 joint-account-notification">
+            <h4>Continuation of Joint-Account <br /> application with </h4>
+            <h3>@ViewData["MainSalutation"] @ViewData["MainName"]</h3>
+        </div>
+    </div>
+}
+
+<div class="container-fluid identity-verification">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="completion-bar">
+                @if ((Convert.ToString(TempData["CustSingpass"]) == "existingCustomer" || Context.Session.GetString("CustSingpass") == "existingCustomer") && Context.Session.GetString("JAC") != null)
+                {
+                    <div class="completion-bar-2">
+                        <progress value="1" max="2"></progress>
+                        <h1 class="text-1"><b>Identity Verification</b></h1>
+                        <h1 class="text-2">Verify Information</h1>
+                        <h2 class="circle circle-1"></h2>
+                        <h2 class="circle circle-2"></h2>
+                    </div>
+                }
+                else if (Convert.ToString(TempData["CustSingpass"]) == "existingCustomer" || Context.Session.GetString("CustSingpass") == "existingCustomer")
+                {
+                    <div class="completion-bar-3">
+                        <progress value="1" max="3"></progress>
+                        <h1 class="text-1"><b>Identity Verification</b></h1>
+                        <h1 class="text-2">Joint-Applicant Information</h1>
+                        <h1 class="text-3">Verify Information</h1>
+                        <h2 class="circle circle-1"></h2>
+                        <h2 class="circle circle-2"></h2>
+                        <h2 class="circle circle-3"></h2>
+                    </div>
+                }
+                else if ((Context.Session.GetString("ApplyMethod") == "QR" || Context.Session.GetString("ApplyMethod") == "iBanking") && Context.Session.GetString("JAC") != null)
+                {
+                    <div class="completion-bar-2">
+                        <progress value="1" max="2"></progress>
+                        <h1 class="text-1"><b>Identity Verification</b></h1>
+                        <h1 class="text-2">Verify Information</h1>
+                        <h2 class="circle circle-1"></h2>
+                        <h2 class="circle circle-2"></h2>
+                    </div>
+                }
+
+                else if (Context.Session.GetString("ApplyMethod") == "Singpass")
+                {
+                    <progress value="1" max="4"></progress>
+                    <h1 class="text-1"><b>Identity Verification</b></h1>
+                    <h1 class="text-2">Main Applicant Information</h1>
+                    <h1 class="text-3">Joint-Applicant Information</h1>
+                    <h1 class="text-4">Verify Information</h1>
+                    <h2 class="circle circle-1"></h2>
+                    <h2 class="circle circle-2"></h2>
+                    <h2 class="circle circle-3"></h2>
+                    <h2 class="circle circle-4"></h2>
+                }
+                else if (Context.Session.GetString("ApplyMethod") == "QR" || Context.Session.GetString("ApplyMethod") == "iBanking")
+                {
+                    <div class="completion-bar-3">
+                        <progress value="1" max="3"></progress>
+                        <h1 class="text-1"><b>Identity Verification</b></h1>
+                        <h1 class="text-2">Joint-Applicant Information</h1>
+                        <h1 class="text-3">Verify Information</h1>
+                        <h2 class="circle circle-1"></h2>
+                        <h2 class="circle circle-2"></h2>
+                        <h2 class="circle circle-3"></h2>
+                    </div>
+                }
+                else if (Context.Session.GetString("JAC") != null)
+                {
+                    <div class="completion-bar-3">
+                        <progress value="1" max="3"></progress>
+                        <h1 class="text-1"><b>Identity Verification</b></h1>
+                        <h1 class="text-2">Joint-Applicant Information</h1>
+                        <h1 class="text-3">Verify Information</h1>
+                        <h2 class="circle circle-1"></h2>
+                        <h2 class="circle circle-2"></h2>
+                        <h2 class="circle circle-3"></h2>
+                    </div>
+                }
+
+            </div>
+            <h1 class="page-title">Before we proceed, allow us to do a quick verification on your identity.</h1>
+            <h5><b>Verify Via</b></h5>
+            <input class="radio-verify" type="radio" id="SMS-OTP" name="verify-type" value="SMS OTP" checked>
+            <label for="SMS-OTP">SMS OTP</label>
+            <input class="radio-verify" type="radio" id="Face" name="verify-type" value="FACE">
+            <label for="Face">Facial Biometric</label>
+            <div class="sms-otp desc" id="sms-verify">
+                <form method="post">
+                    <input class="resend" type="submit" value="Get OTP" asp-controller="Account360" asp-action="Identity" asp-route-id="1">
+                </form>
+                <form method="post">
+                    <h5>@ViewData["MobileNum"] </h5>
+                    <input class="textbox" type="text" placeholder="OTP" asp-for="OTP" required>
+                    <input class="resend" type="submit" value="Submit" asp-controller="Account360" asp-action="Identity" asp-route-id="2">
+                    <h4>@ViewData["Invalid"]</h4>
+                </form>
+            </div>
+            <div class="face-verify desc" id="face-verify" style="display: none;">
+                <form method="post">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div id="webcam"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="justify-content-center align-items-center" id="selfiePlaceholder" style="border: 2px dashed black; display:flex; flex-direction:column; height:170px; width:270px;">
+                                <img src="~/image/camera.png" title="camera icons" style="width:100px; height:auto;" />
+                                <p style="color:grey; font-weight:lighter; text-align:center;">Your Selfie will appear here</p>
+                            </div>
+                            <div id="selfieDiv" style="display: none">
+                                <div><img id="captured"></div>
+                                <div style="display:flex; flex-direction:row; align-items:center">
+                                    <p style="color:grey; font-weight:lighter; text-align:center; padding-right:10px; margin-top:0px; margin-bottom:0px">
+                                        Use picture for verification:
+                                    </p>
+                                    <label class="switch">
+                                        <input type="checkbox" id="usePicture" required>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <input type="hidden" asp-for="SelfieURL" id="url" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <input type="button" id="btncapture" required style="margin-bottom:20px;" value="Take Photo" />
+                        </div>
+
+                    </div>
+                    <input class="face-submit" type="submit" value="Submit" asp-action="IdentityFace">
+
+                    <h2 style="font-size: 20px; font-weight: lighter; color: red;">@TempData["FaceError"]</h2>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,57 @@
+﻿
+@{ ViewData["Title"] = "Success"; }
+
+<div class="success">
+
+    @if (Context.Session.GetString("JAC") != null)
+    {
+        <div style="padding: 0 25% 0 25%; border-width: 3px; border-color: black; text-align: center; margin-top: 50px;">
+            <h1 style="font-size: 30px; text-transform: uppercase; font-weight: bolder;">OCBC Online Joint-Account Opening</h1>
+            <div style="border-style: solid; border-width: 1px; border-color: black; margin-top: 50px; border-radius: 20px;">
+                <div style="background-color: rgb(4, 148, 4); color: whitesmoke; padding: 10px 20px 5px 20px; border-radius: 20px 20px 0 0;">
+                    <h2 style="font-size: 20px;">We have received your application</h2>
+                </div>
+                <div style="margin-top: 80px; text-align: center;">
+                    <h3 style="font-size: 20px; font-weight: lighter;">Your account opening is</h3>
+                    <h1 style="font-weight: bolder; text-transform: uppercase;">@ViewData["Status"]</h1>
+                    <h3 style="font-size: 20px; font-weight: lighter; margin-top: 50px;">Thank you for choosing OCBC 360 Joint-Account</h3>
+                    <h4>@ViewData["Time"]</h4>
+                </div>
+                <div style="background-color: whitesmoke; padding: 20px 30px 20px 30px; margin: 70px 15px 15px 15px; text-align: left; border-radius:  0 0 20px 20px;">
+                    <h6 style="font-weight: lighter">What's Next?</h6>
+                    <h6 style="font-weight: lighter">(1) You will receive an SMS and Email informing you of your account details and setting up your iBanking </h6>
+                </div>
+            </div>
+        </div> }
+    else
+    {
+        <div class="container-fluid" style="margin-top: -60px; padding-bottom: -600px;">
+            <div style="margin: 0 20% 0 20%; text-align: center;">
+                <div class="row">
+                    <div class="col-md-4">
+                        <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_xvqumrty.json" mode="bounce" background="transparent" speed="1" style="width: 1000px; height: 1000px; margin-left: -380px; margin-top: -120px" autoplay></lottie-player>
+                    </div>
+                    <div class="col-md-8">
+                        <div style="margin: 200px 0 0 100px;">
+                            <div style="margin: 100px 0px 0px ; text-align: left;">
+                                <h1 style="font-size: 36px; font-weight: bold;">SUCCESSFUL</h1>
+                            </div>
+                            <div style="text-align: left;">
+                                <h1 style="font-size: 25px; font-weight: normal;">Pending continuation from Joint-Applicant</h1>
+                            </div>
+                            <div style="text-align: left; margin-top: 50px;">
+                                <h1 style="font-size: 22px; font-weight: lighter;">
+                                    The continuation details has been sent to <b>@ViewData["Name"]</b> through SMS (<b>@ViewData["ContactNo"]</b>) and Email (<b>@ViewData["Email"]</b>).
+                                </h1>
+                            </div>
+                            <form>
+                                <div style="margin-top: 60px; text-align: left; z-index: 0; position: relative;">
+                                    <input class="resend" type="submit" value="Close" asp-controller="Home" asp-action="Index">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>}
+</div>

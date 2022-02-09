@@ -1,0 +1,148 @@
+﻿@media only screen and (max-width: 1366px) {
+    .card {
+        margin-left: -110px;
+    }
+}
+
+@media only screen and (max-width: 1206px) {
+    .card {
+        margin-left: -150px;
+    }
+}
+
+@media only screen and (max-width: 1156px) {
+    .card {
+        margin-left: -190px;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .card {
+        margin-top: 80px;
+        margin-left: 0px;
+    }
+}
+
+
+@media only screen and (max-width: 454px) {
+    .card {
+        margin-left: 0px;
+    }
+
+    .container-fluid {
+        width: 95%;
+        padding-right: -40px;
+    }
+
+    .sp_bg h1 {
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .sp_bg h2 {
+        font-size: 18px;
+        font-weight: lighter;
+        margin-bottom: 20px;
+    }
+
+    .sp_bg h3 {
+        font-size: 15px;
+        margin-top: 20px;
+    }
+
+    .sp_bg img {
+        margin-top: 0px;
+        height: 60%;
+    }
+
+    /**Card*/
+
+    .card {
+        margin-top: 50px;
+        width: 350px;
+        height: 500px;
+        padding: 10px 0px 0px 0px;
+        border-radius: 10px;
+        border-color: transparent;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .login-method label {
+        margin: 0 30px 0 20px;
+        font-size: 15px;
+        background-color: transparent;
+        color: rgb(195, 195, 195);
+        font-weight: 600;
+        border-color: transparent;
+    }
+
+    .password-login {
+        padding: 20px 40px;
+    }
+
+        .password-login h1 {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .password-login .textbox {
+            height: 50px;
+            width: 100%;
+            padding-left: 10px;
+            border-radius: 5px;
+            border-color: rgb(121, 121, 121);
+            color: rgb(121, 121, 121);
+            margin-top: 10px;
+        }
+
+    .card a {
+        font-size: 14px;
+        text-decoration: none;
+    }
+
+    .card .align-right {
+        text-align: right;
+        margin-top: -20px;
+    }
+
+    /**Auth Page*/
+
+    .info-box {
+        border-width: 2px;
+        border-style: solid;
+        border-color: rgb(180, 180, 180);
+        border-radius: 5px;
+        border-top: red solid 10px;
+        margin: 60px 0 50px;
+    }
+
+
+    .info-box-header-content h1 {
+        text-align: left;
+        font-size: 16px;
+        margin-top: 13px;
+    }
+
+    .info-box-body li {
+        display: block;
+        margin-top: 7px;
+        font-size: 15px;
+        font-weight: 600;
+        color: rgb(68, 68, 68)
+    }
+
+    .accept-agreement h3 {
+        font-size: 15px;
+        color: rgb(68, 68, 68)
+    }
+
+    .accept-agreement .submit {
+        height: 50px;
+        width: 110px;
+        border-radius: 5px;
+        background-color: red;
+        border-color: transparent;
+        color: rgb(255, 255, 255);
+        margin: 50px 0px 0px 50px;
+    }
+}

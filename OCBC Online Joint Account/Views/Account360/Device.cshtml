@@ -1,0 +1,28 @@
+﻿@model OCBC_Joint_Account_Application.Models.Account360ViewModel
+
+@{
+    ViewData["Title"] = "Network";
+}
+
+<div class="container-fluid device" style="margin-top: -60px; padding-bottom: -600px;">
+    <div class="page-margin" style="margin: 0 20% 0 20%;">
+
+        <h1 class="device-title">FOUND A DEVICE!</h1>
+        <h4 class="device-para">Confirm that this is the device you want to connect to. </h4>
+
+        <h3 class="device-info">Device Name: <span>Desmond PC</span></h3>
+        <h3 class="device-info">IP Address: <span>192.168.1.124</span></h3>
+        <form method="post">
+            <div style="margin-top: 60px; text-align: left; z-index: 0; position: relative;">
+                <input class="resend device-btn" type="submit" value="Reject" asp-controller="Account360" asp-route-id="1" asp-action="Connect">
+            </div>
+
+            <div style="margin-top: 60px; text-align: left; z-index: 0; position: relative;">
+                <input class="resend device-btn" type="submit" value="Accept" asp-controller="Account360" asp-route-id="1" asp-action="Connect" style="background-color: green">
+            </div>
+        </form>
+
+    </div>
+</div>
+
+

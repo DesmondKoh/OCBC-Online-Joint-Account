@@ -1,0 +1,54 @@
+﻿@media screen and (max-width:414px) {
+    .inner-wrap {
+        margin-left: 2%;
+        margin-right: auto;
+    }
+
+    .login-form {
+        width: 370px;
+    }
+
+    .login-btn {
+        margin-right: 40px;
+    }
+
+    .ib-logo {
+        margin-left: 20px;
+    }
+
+    .form-textbox:active {
+        outline: none;
+    }
+
+    .button-header {
+        display: flex;
+        height: 70px;
+        justify-content: space-around;
+        background-color: whitesmoke;
+        padding-top: 20px;
+        padding-bottom: 10px;
+        font-weight: bold;
+        color: dimgray;
+    }
+
+    .no-pin {
+        text-align: center;
+        margin-top: -80px;
+        margin-bottom: 20px;
+    }
+}
+
+@media only screen and (max-width: 1366px) {
+    .inner-wrap {
+        margin-left: 10%;
+        margin-right: auto;
+    }
+
+    .login-form {
+        width: 430px;
+    }
+
+    .btn-login, .no-pin {
+        margin-top: -60px;
+    }
+}

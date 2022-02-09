@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewData["Title"] = "Connect";
+}
+
+<div class="container-fluid denied" style="margin-top: -60px; padding-bottom: -600px;">
+    <div class="page-margin" style="margin: 0 20% 0 20%; text-align: center;">
+        <div class="row">
+            <div class="col-md-4">
+                <lottie-player class="lottie-image" src="https://assets9.lottiefiles.com/packages/lf20_Riflal.json" mode="bounce" background="transparent" speed="1" style="width: 400px; height: 400px; margin-top: 120px; margin-left: -60px;" autoplay loop></lottie-player>
+            </div>
+            <div class="col-md-8">
+                <div style="margin: 200px 0 0 100px;">
+                    <div style="margin: 100px 0px 15px; text-align: left;">
+                        <h1 style="font-size: 36px; font-weight: bold;">INCOMING CONNECTION...</h1>
+                    </div>
+                    <div style="text-align: left;">
+                        <h2 style="font-size: 25px; font-weight: normal;">
+                            You have an incoming connection. By accepting, you will receive data from the main applicant.
+                        </h2>
+                    </div>
+                    <div style="text-align: left; margin-top: 50px;">
+                        <h1 style="font-size: 22px; font-weight: lighter;">
+                        </h1>
+                    </div>
+                    <form method="post">
+                        <div style="margin-top: 60px; text-align: left; z-index: 0; position: relative;">
+                            <input class="resend device-btn" type="submit" value="Reject" asp-controller="Account360" asp-route-id="1" asp-action="Connect">
+                        </div>
+
+                        <div style="margin-top: 60px; text-align: left; z-index: 0; position: relative;">
+                            <input class="resend device-btn" type="submit" value="Accept" asp-controller="Account360" asp-route-id="2" asp-action="Connect" style="background-color: green">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
