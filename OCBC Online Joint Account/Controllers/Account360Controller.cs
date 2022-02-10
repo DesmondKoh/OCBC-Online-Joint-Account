@@ -219,7 +219,7 @@ namespace OCBC_Joint_Account_Application.Controllers
                 var message = MessageResource.Create(messageOptions);
 
                 HttpContext.Session.SetInt32("OTP", OTP);
-                ViewData["MobileNum"] = "Your OTP is sent to +65 " + mobileNum + "  " + OTP;
+                ViewData["MobileNum"] = "Your OTP is sent to +65 " + mobileNum;
             }
             else
             {
@@ -1275,29 +1275,34 @@ namespace OCBC_Joint_Account_Application.Controllers
                     {
                         newApplication.Status = "Successful";
                         HttpContext.Session.SetString("JAC", JAC);
+                        RunAsyncFinal(a360.Salutation, a360.FullName, a360.Email, JAC).Wait();
                     }
 
-                    // Email API
-                    RunAsync(a360.Salutation, a360.FullName, a360.Email, JAC, a360.SalutationJoint, a360.JointApplicantName).Wait();
-
-                    //Send Unique Link via SMS
-                    try
+                    if(HttpContext.Session.GetString("ContinueWifi") == null)
                     {
-                        var accountSid = "AC900a65cf35b142ba9d231968f7975595";
-                        var authToken = "6dbf2032023e857f59f960615d9afb65";
-                        TwilioClient.Init(accountSid, authToken);
-                        var messageOptions = new CreateMessageOptions(new PhoneNumber("+65" + a360.ContactNo));
-                        messageOptions.MessagingServiceSid = "MG9dc1a6ffbac9048864eaadfda51637fc";
-                        messageOptions.Body = "OCBC: 360 Account Joint-Application\n\nDear " + a360.JointApplicantName + "\n\nMr " + a360.FullName + " has initiated a Joint-Account application and is requesting you to complete it.\nYou may complete your application via https://ocbc-npt2.azurewebsites.net/Account360/ApplyOnline?AT=2&JAC=" + JAC + "\n\nIf you don't know this person, call 1800 363 333 at once.";
-                        var message = MessageResource.Create(messageOptions);
-                        Console.WriteLine(message.Body);
-                    }
-                    catch (Twilio.Exceptions.ApiException)
-                    {
-                        return RedirectToAction("Index", "Home");
-                    }
+                        // Email API
+                        RunAsync(a360.Salutation, a360.FullName, a360.Email, JAC, a360.SalutationJoint, a360.JointApplicantName).Wait();
 
-                    Console.WriteLine(" https://localhost:44381/Account360/ApplyOnline?AT=2&JAC=" + JAC);
+                        //Send Unique Link via SMS
+                        try
+                        {
+                            var accountSid = "AC900a65cf35b142ba9d231968f7975595";
+                            var authToken = "6dbf2032023e857f59f960615d9afb65";
+                            TwilioClient.Init(accountSid, authToken);
+                            var messageOptions = new CreateMessageOptions(new PhoneNumber("+65" + a360.ContactNo));
+                            messageOptions.MessagingServiceSid = "MG9dc1a6ffbac9048864eaadfda51637fc";
+                            messageOptions.Body = "OCBC: 360 Account Joint-Application\n\nDear " + a360.JointApplicantName + "\n\nMr " + a360.FullName + " has initiated a Joint-Account application and is requesting you to complete it.\nYou may complete your application via https://ocbc-npt2.azurewebsites.net/Account360/ApplyOnline?AT=2&JAC=" + JAC + "\n\nIf you don't know this person, call 1800 363 333 at once.";
+                            var message = MessageResource.Create(messageOptions);
+                            Console.WriteLine(message.Body);
+                        }
+                        catch (Twilio.Exceptions.ApiException)
+                        {
+                            return RedirectToAction("Index", "Home");
+                        }
+
+                        Console.WriteLine(" https://localhost:44381/Account360/ApplyOnline?AT=2&JAC=" + JAC);
+                    }
+          
                     newApplication.JointApplicantCode = JAC;
                     custApp.JointApplicantName = a360.JointApplicantName;
                     custApp.JointApplicantNRIC = a360.JointApplicantNRIC;
