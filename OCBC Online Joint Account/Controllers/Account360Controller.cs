@@ -209,14 +209,14 @@ namespace OCBC_Joint_Account_Application.Controllers
                 int OTP = rnd.Next(100000, 999999);
                 string mobileNum = HttpContext.Session.GetString("mobileNum");
 
-                ////OTP API by Twilio
-                //var accountSid = "AC900a65cf35b142ba9d231968f7975595";
-                //var authToken = "6dbf2032023e857f59f960615d9afb65";
-                //TwilioClient.Init(accountSid, authToken);
-                //var messageOptions = new CreateMessageOptions(new PhoneNumber("+65" + mobileNum));
-                //messageOptions.MessagingServiceSid = "MG9dc1a6ffbac9048864eaadfda51637fc";
-                //messageOptions.Body = "OCBC: Your One-Time Password is " + OTP + ".\nUse it to continue with the application.";
-                //var message = MessageResource.Create(messageOptions);
+                //OTP API by Twilio
+                var accountSid = "AC900a65cf35b142ba9d231968f7975595";
+                var authToken = "6dbf2032023e857f59f960615d9afb65";
+                TwilioClient.Init(accountSid, authToken);
+                var messageOptions = new CreateMessageOptions(new PhoneNumber("+65" + mobileNum));
+                messageOptions.MessagingServiceSid = "MG9dc1a6ffbac9048864eaadfda51637fc";
+                messageOptions.Body = "OCBC: Your One-Time Password is " + OTP + ".\nUse it to continue with the application.";
+                var message = MessageResource.Create(messageOptions);
 
                 HttpContext.Session.SetInt32("OTP", OTP);
                 ViewData["MobileNum"] = "Your OTP is sent to +65 " + mobileNum + "  " + OTP;
@@ -1283,14 +1283,14 @@ namespace OCBC_Joint_Account_Application.Controllers
                     //Send Unique Link via SMS
                     try
                     {
-                        //var accountSid = "AC900a65cf35b142ba9d231968f7975595";
-                        //var authToken = "6dbf2032023e857f59f960615d9afb65";
-                        //TwilioClient.Init(accountSid, authToken);
-                        //var messageOptions = new CreateMessageOptions(new PhoneNumber("+65" + a360.ContactNo));
-                        //messageOptions.MessagingServiceSid = "MG9dc1a6ffbac9048864eaadfda51637fc";
-                        //messageOptions.Body = "OCBC: 360 Account Joint-Application\n\nDear " + a360.JointApplicantName + "\n\nMr " + a360.FullName + " has initiated a Joint-Account application and is requesting you to complete it.\nYou may complete your application via https://ocbc-npt2.azurewebsites.net/Account360/ApplyOnline?AT=2&JAC=" + JAC + "\n\nIf you don't know this person, call 1800 363 333 at once.";
-                        //var message = MessageResource.Create(messageOptions);
-                        //Console.WriteLine(message.Body);
+                        var accountSid = "AC900a65cf35b142ba9d231968f7975595";
+                        var authToken = "6dbf2032023e857f59f960615d9afb65";
+                        TwilioClient.Init(accountSid, authToken);
+                        var messageOptions = new CreateMessageOptions(new PhoneNumber("+65" + a360.ContactNo));
+                        messageOptions.MessagingServiceSid = "MG9dc1a6ffbac9048864eaadfda51637fc";
+                        messageOptions.Body = "OCBC: 360 Account Joint-Application\n\nDear " + a360.JointApplicantName + "\n\nMr " + a360.FullName + " has initiated a Joint-Account application and is requesting you to complete it.\nYou may complete your application via https://ocbc-npt2.azurewebsites.net/Account360/ApplyOnline?AT=2&JAC=" + JAC + "\n\nIf you don't know this person, call 1800 363 333 at once.";
+                        var message = MessageResource.Create(messageOptions);
+                        Console.WriteLine(message.Body);
                     }
                     catch (Twilio.Exceptions.ApiException)
                     {
