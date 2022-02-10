@@ -181,23 +181,21 @@ namespace OCBC_Joint_Account_Application.Controllers
             HttpContext.Session.SetString("PageType", "Account360");
 
             //Get Mobile Number
-            string mobileNum = null;
             if (HttpContext.Session.GetString("ApplyMethod") == "iBanking" || HttpContext.Session.GetString("ApplyMethod") == "QR")
             {
                 foreach (Customer c in customerContext.GetCustomerByNRIC(HttpContext.Session.GetString("iBankingLogin")))
                 {
-                    mobileNum = c.ContactNo;
+                    HttpContext.Session.SetString("mobileNum", c.ContactNo);
                 }
             }
             else
             {
                 foreach (Singpass sp in singpassContext.GetSingpassByNRIC(HttpContext.Session.GetString("Applicant")))
                 {
-                    mobileNum = sp.MobileNum;
+                    HttpContext.Session.SetString("mobileNum", sp.MobileNum);
                 }
             }
-
-            HttpContext.Session.SetString("mobileNum", mobileNum);     
+    
             return View();
         }
 
@@ -1030,7 +1028,9 @@ namespace OCBC_Joint_Account_Application.Controllers
         public ActionResult JointApplicant()
         {
             HttpContext.Session.SetString("PageType", "Account360");
-            if (HttpContext.Session.GetString("JAC") != null && (HttpContext.Session.GetString("ApplyMethod") == "QR" || HttpContext.Session.GetString("ApplyMethod") == "iBanking" || HttpContext.Session.GetString("CustSingpass") == "existingCustomer"))
+
+            // Second Applicant
+            if ((HttpContext.Session.GetString("JAC") != null || HttpContext.Session.GetString("ContinueWifi") != null) && (HttpContext.Session.GetString("ApplyMethod") == "QR" || HttpContext.Session.GetString("ApplyMethod") == "iBanking" || HttpContext.Session.GetString("CustSingpass") == "existingCustomer"))
             {
                 checkJAC(HttpContext.Session.GetString("JAC"));
                 Account360ViewModel ac360 = new Account360ViewModel();
@@ -1061,6 +1061,7 @@ namespace OCBC_Joint_Account_Application.Controllers
                         ac360.AnnualIncome = c.Income;
                     }
                 }
+
                 if (HttpContext.Session.GetString("ApplyMethod") == "QR")
                 {
                     foreach (Customer c in customerContext.GetCustomerByNRIC(HttpContext.Session.GetString("MainApplicantNRIC")))
@@ -1206,8 +1207,9 @@ namespace OCBC_Joint_Account_Application.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Verify(Account360ViewModel a360, int? id)
         {
+            
             if(id == 1)
-            {
+            {               
                 string JointAC = HttpContext.Session.GetString("JAC");
 
                 // This line of code to purely get the date of birth because it does not exisit in the post page of verify
@@ -1259,15 +1261,21 @@ namespace OCBC_Joint_Account_Application.Controllers
                 }
 
                 newApplication.Status = "Pending";
-
+               
                 // Main applicant
-                if (JointAC == null)
+                if (JointAC == null || HttpContext.Session.GetString("ContinueWifi") != null)
                 {
                     Random rnd = new Random();
                     int rndNum1 = rnd.Next(100000000, 999999999);
                     string JAC = "J" + DateTime.Today.Day + rndNum1 + a360.NRIC.Substring(5, 3);
-
+                    HttpContext.Session.SetString("JACWIFI", JAC);
                     TempData["JAC"] = JAC;
+
+                    if (HttpContext.Session.GetString("ContinueWifi") != null)
+                    {
+                        newApplication.Status = "Successful";
+                        HttpContext.Session.SetString("JAC", JAC);
+                    }
 
                     // Email API
                     RunAsync(a360.Salutation, a360.FullName, a360.Email, JAC, a360.SalutationJoint, a360.JointApplicantName).Wait();
@@ -1275,14 +1283,14 @@ namespace OCBC_Joint_Account_Application.Controllers
                     //Send Unique Link via SMS
                     try
                     {
-                        var accountSid = "AC900a65cf35b142ba9d231968f7975595";
-                        var authToken = "6dbf2032023e857f59f960615d9afb65";
-                        TwilioClient.Init(accountSid, authToken);
-                        var messageOptions = new CreateMessageOptions(new PhoneNumber("+65" + a360.ContactNo));
-                        messageOptions.MessagingServiceSid = "MG9dc1a6ffbac9048864eaadfda51637fc";
-                        messageOptions.Body = "OCBC: 360 Account Joint-Application\n\nDear " + a360.JointApplicantName + "\n\nMr " + a360.FullName + " has initiated a Joint-Account application and is requesting you to complete it.\nYou may complete your application via https://ocbc-npt2.azurewebsites.net/Account360/ApplyOnline?AT=2&JAC=" + JAC + "\n\nIf you don't know this person, call 1800 363 333 at once.";
-                        var message = MessageResource.Create(messageOptions);
-                        Console.WriteLine(message.Body);
+                        //var accountSid = "AC900a65cf35b142ba9d231968f7975595";
+                        //var authToken = "6dbf2032023e857f59f960615d9afb65";
+                        //TwilioClient.Init(accountSid, authToken);
+                        //var messageOptions = new CreateMessageOptions(new PhoneNumber("+65" + a360.ContactNo));
+                        //messageOptions.MessagingServiceSid = "MG9dc1a6ffbac9048864eaadfda51637fc";
+                        //messageOptions.Body = "OCBC: 360 Account Joint-Application\n\nDear " + a360.JointApplicantName + "\n\nMr " + a360.FullName + " has initiated a Joint-Account application and is requesting you to complete it.\nYou may complete your application via https://ocbc-npt2.azurewebsites.net/Account360/ApplyOnline?AT=2&JAC=" + JAC + "\n\nIf you don't know this person, call 1800 363 333 at once.";
+                        //var message = MessageResource.Create(messageOptions);
+                        //Console.WriteLine(message.Body);
                     }
                     catch (Twilio.Exceptions.ApiException)
                     {
@@ -1295,9 +1303,11 @@ namespace OCBC_Joint_Account_Application.Controllers
                     custApp.JointApplicantNRIC = a360.JointApplicantNRIC;
                     applicationContext.Add(newApplication);
                 }
-                else // Joint applicant
+                
+                if (JointAC != null) // Joint applicant
                 {
-                    List<Application> mainApplication = applicationContext.GetApplicationByJointApplicantionCode(JointAC);
+                    List<Application> mainApplication = mainApplication = applicationContext.GetApplicationByJointApplicantionCode(JointAC);
+                       
                     // Setting applicationID with JAC
                     foreach (Application a in mainApplication)
                     {

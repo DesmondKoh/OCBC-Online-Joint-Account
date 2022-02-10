@@ -675,3 +675,13 @@ input:checked + .slider:before {
 .verify-model{
     font-size: 20px;
 }
+
+.wifi-margin{
+    margin-top: 50px;
+    margin-bottom: 200px;
+}
+
+.network-margin {
+    margin-top: 50px;
+    margin-bottom: 200px;
+}

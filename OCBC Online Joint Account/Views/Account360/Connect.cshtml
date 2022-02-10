@@ -5,7 +5,7 @@
 
 <div class="container-fluid denied" style="margin-top: -60px; padding-bottom: -600px;">
     <div class="page-margin" style="margin: 0 20% 0 20%; text-align: center;">
-        <div class="row">
+        <div class="row wifi-margin">
             <div class="col-md-4">
                 <lottie-player class="lottie-image" src="https://assets9.lottiefiles.com/packages/lf20_Riflal.json" mode="bounce" background="transparent" speed="1" style="width: 320px; height: 320px; margin-top: 170px; margin-left: -60px;" autoplay loop></lottie-player>
             </div>
@@ -29,10 +29,20 @@
                         </div>
 
                         <div style="margin-top: 60px; text-align: left; z-index: 0; position: relative;">
-                            <input class="resend device-btn" type="submit" value="Accept" asp-controller="Account360" asp-route-id="2" asp-action="Connect" style="background-color: green">
+                            <input class="resend device-btn" type="submit" value="Accept" data-toggle="modal" data-target="#accTypeModalCenter" asp-controller="Account360" asp-route-id="2" asp-action="Connect" style="background-color: green">
                         </div>
                     </form>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="accTypeModalCenter" tabindex="-1" role="dialog" aria-labelledby="accTypeModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h2 class="verify-model">Connecting...</h2>
             </div>
         </div>
     </div>
